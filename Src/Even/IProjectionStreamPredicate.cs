@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Reflection;
 
 namespace Even
 {
@@ -26,7 +27,11 @@ namespace Even
 
         public object GetDeterministicHashSource()
         {
+#if NETSTANDARD1_6
+            return GetType().Name + _type.FullName + _type.GetTypeInfo().Assembly.GetName().FullName;
+#else
             return GetType().Name + _type.FullName + _type.Assembly.GetName().FullName;
+#endif
         }
     }
 }

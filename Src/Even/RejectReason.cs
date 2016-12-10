@@ -9,7 +9,11 @@ namespace Even
     [DebuggerDisplay("FirstReason")]
     public class RejectReasons : IEnumerable<KeyValuePair<string, string>>
     {
+#if NETSTANDARD1_6
+        private Dictionary<string, List<string>> _reasons = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+#else
         private Dictionary<string, List<string>> _reasons = new Dictionary<string, List<string>>(StringComparer.InvariantCultureIgnoreCase);
+#endif
 
         public RejectReasons()
         { }

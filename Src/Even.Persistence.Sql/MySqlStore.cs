@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Even.Persistence.Sql
 {
+#if !NETSTANDARD16
     public class MySqlStore : BaseSqlStore
     {
         public MySqlStore(DbProviderFactory factory, string connectionString, bool createTables)
@@ -60,4 +61,5 @@ create table if not exists {2} (
                 throw new DuplicatedEntryException();
         }
     }
+#endif
 }

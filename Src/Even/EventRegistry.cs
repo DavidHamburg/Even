@@ -9,7 +9,11 @@ namespace Even
 {
     public class EventRegistry
     {
+#if NETSTANDARD1_6
+        public Dictionary<string, Type> _mapping = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
+#else
         public Dictionary<string, Type> _mapping = new Dictionary<string, Type>(StringComparer.InvariantCultureIgnoreCase);
+#endif
 
         public void Register(string eventType, Type clrType)
         {

@@ -60,7 +60,12 @@ namespace Even
             _name = stream._name;
 
             // only store the original name if its different from the stream name
-            if (!String.Equals(_name, originalName, StringComparison.InvariantCultureIgnoreCase))
+#if NETSTANDARD1_6
+            var comparison = StringComparison.OrdinalIgnoreCase;
+#else
+            var comparison = StringComparison.InvariantCultureIgnoreCase;
+#endif
+            if (!String.Equals(_name, originalName, comparison))
                 _originalName = originalName;
         }
 
@@ -106,7 +111,7 @@ namespace Even
             return new Stream(hash);
         }
 
-        #region Equality
+#region Equality
 
         public override int GetHashCode()
         {
@@ -126,9 +131,9 @@ namespace Even
             return StructuralComparisons.StructuralEqualityComparer.Equals(Hash, other.Hash);
         }
 
-        #endregion
+#endregion
 
-        #region Operators
+#region Operators
 
         public static implicit operator Stream(string streamName)
         {
@@ -140,9 +145,9 @@ namespace Even
             return new Stream(hash);
         }
 
-        #endregion
+#endregion
 
-        #region Helpers
+#region Helpers
 
         private static void CheckHashArgument(byte[] hash)
         {
@@ -164,12 +169,19 @@ namespace Even
 
         private static byte[] ComputeHash(byte[] input)
         {
+#if NETSTANDARD1_6
+            using (var sha1 = SHA1.Create())
+            {
+                return sha1.ComputeHash(input ?? new byte[0]);
+            }
+#else
             var sha1 = new SHA1Managed();
             return sha1.ComputeHash(input ?? new byte[0]);
+#endif
         }
 
         private string DebuggerText => $"{ToHexString()} ({Name})";
 
-        #endregion
+#endregion
     }
 }

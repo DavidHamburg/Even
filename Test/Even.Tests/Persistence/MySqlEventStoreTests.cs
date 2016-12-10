@@ -1,4 +1,5 @@
-﻿using DBHelpers;
+﻿#if !NETSTANDARD16
+using DBHelpers;
 using Even.Persistence;
 using Even.Persistence.Sql;
 using MySql.Data.MySqlClient;
@@ -34,3 +35,5 @@ namespace Even.Tests.Persistence
         }
     }
 }
+
+#endif

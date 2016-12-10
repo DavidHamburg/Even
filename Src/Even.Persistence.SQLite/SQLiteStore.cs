@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD16
+using System;
 using System.Data.Common;
 using System.Data.SQLite;
 using Even.Persistence.Sql;
@@ -63,3 +64,4 @@ CREATE TABLE IF NOT EXISTS {2} (
         }
     }
 }
+#endif

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace Even
@@ -41,8 +42,11 @@ namespace Even
         private static string GetEventType(object o)
         {
             var type = o.GetType();
-
+#if NETSTANDARD1_6
+            var esEvent = type.GetTypeInfo().GetCustomAttributes(typeof(ESEventAttribute), false).FirstOrDefault() as ESEventAttribute;
+#else
             var esEvent = type.GetCustomAttributes(typeof(ESEventAttribute), false).FirstOrDefault() as ESEventAttribute;
+#endif
 
             if (esEvent != null)
                 return esEvent.EventType;
@@ -55,12 +59,21 @@ namespace Even
 
         private static bool IsAnonymousType(Type type)
         {
+#if NETSTANDARD1_6
+            return type.GetTypeInfo().GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any() && type.FullName.Contains("AnonymousType");
+#else
             return type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Length > 0 && type.FullName.Contains("AnonymousType");
+#endif
         }
 
         private static string GetUnversionedQualifiedName(Type type)
         {
-            return type.FullName + ", " + type.Assembly.GetName().Name;
+#if NETSTANDARD1_6
+            var name = type.GetTypeInfo().Assembly.GetName().Name;
+#else
+            var name = type.Assembly.GetName().Name;
+#endif
+            return type.FullName + ", " + name;
         }
     }
 }

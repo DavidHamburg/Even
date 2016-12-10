@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿#if !NETSTANDARD16
+using System.Data.Common;
 using DBHelpers;
 using Even.Persistence.SQLite;
 
@@ -29,3 +30,4 @@ namespace Even.Tests.Persistence
         }
     }
 }
+#endif

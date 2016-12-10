@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,8 +22,13 @@ namespace Even
 
         public static string GetCategory(Type type)
         {
+#if NETSTANDARD1_6
+            var a = type.GetTypeInfo().GetCustomAttribute(typeof(ESCategoryAttribute)) as ESCategoryAttribute;
+            return a?.Category ?? type.Name.ToLowerInvariant();
+#else
             var a = Attribute.GetCustomAttribute(type, typeof(ESCategoryAttribute)) as ESCategoryAttribute;
             return a?.Category ?? type.Name.ToLowerInvariant();
+#endif
         }
     }
 }

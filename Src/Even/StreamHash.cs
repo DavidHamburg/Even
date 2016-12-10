@@ -63,8 +63,15 @@ namespace Even
         private static byte[] ComputeHash(string str)
         {
             var bytes = Encoding.UTF8.GetBytes(str);
+#if NETSTANDARD1_6
+            using (var sha1 = SHA1.Create())
+            {
+                return sha1.ComputeHash(bytes);
+            }
+#else
             var sha1 = new SHA1Managed();
             return sha1.ComputeHash(bytes);
+#endif
         }
     }
 }
