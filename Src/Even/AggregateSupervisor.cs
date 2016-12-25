@@ -60,7 +60,11 @@ namespace Even
             });
 
             // remove terminated children
-            Receive<Terminated>(t => RemoveActiveProcessor(t.ActorRef));
+            Receive<Terminated>(t =>
+            {
+                RemoveActiveProcessor(t.ActorRef);
+                return true;
+            });
         }
 
         bool RemoveActiveProcessor(IActorRef aRef)
